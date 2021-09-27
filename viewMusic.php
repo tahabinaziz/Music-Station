@@ -42,7 +42,7 @@ function filterTable($query)
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid">
-                    <h1 class="mt-4" style="text-align:center; ">Dashboard</h1>
+                    <h1 class="mt-4" style="text-align:center; ">View Music</h1>
                     <div class="form-group">
                         <form method="POST" action="">
                             <div class="row">
