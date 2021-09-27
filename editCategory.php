@@ -31,7 +31,7 @@ $row = mysqli_fetch_assoc($result);
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid">
-                    <h1 class="mt-4" style="text-align:center; font-family:Georgia, 'Times New Roman', Times, serif; ">PAKISTAN AMERICAN CULTURAL CENTER</h1>
+                    <h1 class="mt-4" style="text-align:center; ">Edit Category</h1>
                     <!-- <img src="./assets/img/logo.png" height="100px" text-align="center" /> -->
 
                     <ol class="breadcrumb mb-4">

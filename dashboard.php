@@ -3,16 +3,15 @@ include './header/nav.php';
 include("db.php");
 if (isset($_POST['search'])) {
     $valueToSearch = $_POST['valueToSearch'];
-    $query = "SELECT tbl_enquiry.id,tbl_enquiry.prnNo , tbl_enquiry.name, tbl_enquiry.courseId,tbl_enquiry.cellNo,tbl_courses.course FROM tbl_enquiry inner join tbl_courses on tbl_enquiry.courseId = tbl_courses.id where tbl_enquiry.name LIKE '%" . $valueToSearch . "%' and tbl_enquiry.prnNo != ''    ";
+    $query = "SELECT  category.category, category.id as categoryId, music.id,music.name,music.singer,music.music from music inner join category on music.categoryId = category.id where music.name LIKE '%" . $valueToSearch . "%' ";
     $search_result = filterTable($query);
-
 } else {
-    $query = "SELECT tbl_enquiry.id, tbl_enquiry.prnNo ,tbl_enquiry.name, tbl_enquiry.courseId,tbl_enquiry.cellNo,tbl_courses.course FROM tbl_enquiry inner join tbl_courses on tbl_enquiry.courseId = tbl_courses.id  where tbl_enquiry.prnNo != ''   ORDER BY tbl_enquiry.id DESC";
+    $query = "SELECT category.category, category.id as categoryId, music.id,music.name,music.singer,music.music from music inner join category on music.categoryId = category.id   ORDER BY music.id DESC";
     $search_result = filterTable($query);
 }
 function filterTable($query)
 {
-    include("connection.php");
+    include("db.php");
     $filterResult = mysqli_query($connect, $query);
     return $filterResult;
 }
@@ -44,13 +43,8 @@ function filterTable($query)
             <main>
                 <div class="container-fluid">
                     <h1 class="mt-4" style="text-align:center; ">Dashboard</h1>
-                   
                     <div class="form-group">
-                    <form class="" action="eFormcsv.php" method="post" >
-                                
-                                </form>
-
-                        <form method="POST" action="voucherList.php">
+                        <form method="POST" action="">
                             <div class="row">
                                 <div class="col-md-3">
                                 </div>
@@ -58,21 +52,14 @@ function filterTable($query)
                                     <input type="text" name="valueToSearch" class="form-control" id="prn" placeholder="Name">
                                 </div>
                                 <span class="col-md-3">
-                                    
                                     <button type="submit" id="prnButton" name="search" class="btn btn-primary">Search</button>
                                 </span>
-                                
                             </div>
-
-                            
-
                     </div>
                     <div className="card mb-4">
                         <div className="card-header">
                             <i className="fa fa-home mr-3"></i>
-
                         </div>
-                        
                         <div class="container" id="box">
                             <div className="card-body">
                                 <div class="table-responsive">
@@ -81,40 +68,36 @@ function filterTable($query)
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Categroy</th>
-                                                <th scope="col">Name</th>
                                                 <th scope="col">Singer</th>
+                                                <th scope="col">Name</th>
                                                 <th scope="col">Music</th>
                                                 <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
-
-
-
                                             <?php
-
-                                            include("connection.php");
+                                            include("db.php");
                                             $no = 0;
                                             while ($row = mysqli_fetch_array($search_result)) : ?>
-                                                <?php $no = $no + 1;?>
+                                                <?php $no = $no + 1; ?>
                                                 <tr>
-                                                <td><?php echo $no ?></td>
-                                                <td><?php echo strtoupper($row['prnNo']); ?></td> 
+                                                    <td><?php echo $no ?></td>
+                                                    <td><?php echo strtoupper($row['category']); ?></td>
+                                                    <td><?php echo strtoupper($row['singer']); ?></td>
                                                     <td><?php echo strtoupper($row['name']); ?></td>
-                                                    <td><?php echo strtoupper($row['course']); ?></td>
-                                                    <td><?php echo $row['cellNo']; ?></td>
-                                                   
-                                                    <td><a <?php echo 'href="viewEnquiryPrintForm.php?id=' . $row["id"] . '"' ?> title="View" data-toggle="tooltip"><i class="fas fa-file-pdf" style="color:#CD113B"></i></a> |
-                                                        <a <?php echo 'href="editEform.php?id=' . $row["id"] . '"' ?> title="Edit" data-toggle="tooltip"><i class="fas fa-pen" style="color:orange"></i></a> |
-                                                        <a <?php echo ' href="challan.php?id=' . $row["id"] . '"' ?> title="Edit Status" data-toggle="tooltip"><i class="fas fa-receipt" style="color:#B2B1B9 "></i></a> |
-                                                        <!-- <a <?php echo ' href="deleteEform.php?id=' . $row["id"] . '"' ?> title="Delete" data-toggle="tooltip"><i class="fa fa-trash" style="color:red"></i></a> -->
+                                                    <td>
+                                                        <audio controls>
+                                                            <source src= <?php echo $row['music'] ?> type="audio/ogg">
+                                                        </audio>
+                                                    </td>
+                                                    <td>
+                                                        <a <?php echo ' href="deleteMusic.php?id=' . $row["id"] . '"' ?> title="Delete" data-toggle="tooltip"><i class="fa fa-trash" style="color:red"></i></a>
 
                                                     </td>
 
                                                 </tr>
                                             <?php endwhile; ?>
-                                           
+
                                     </table>
 
                                     </form>
@@ -140,29 +123,6 @@ function filterTable($query)
             </footer>
         </div>
     </div>
-    <script>
-        function myFunction() {
-            var x = document.getElementById("button");
-            var xInput = document.getElementById("prn");
-            var yButton = document.getElementById("prnButton");
-            var csv = document.getElementById("csv");
-            
-            if (x.style.display === "none" && xInput.style.display === "none" && yButton.style.display === "none") {
-                x.style.display = "block";
-                yButton.style.display = "block";
-                csv.style.display = "block";
-                xInput.style.display = "block";
-               
-            } else {
-                x.style.display = "none";
-                csv.style.display = "none";
-                xInput.style.display = "none";
-                yButton.style.display = "none";
-                
-            }
-            window.print();
-        }
-    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
